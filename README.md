@@ -75,8 +75,7 @@ $$
 where $S_W$ is the within-class scatter matrix:
 
 $$
-S_W = \sum_{i=1}^{N} (h_i^{(f)} - \mu_f)(h_i^{(f)} - \mu_f)^\top
-+ \sum_{i=1}^{N} (h_i^{(h)} - \mu_h)(h_i^{(h)} - \mu_h)^\top.
+S_W = \sum_{i=1}^{N} (h_i^{(f)} - \mu_f)(h_i^{(f)} - \mu_f)^\top+\sum_{i=1}^{N} (h_i^{(h)} - \mu_h)(h_i^{(h)} - \mu_h)^\top.
 $$
 
 In high-dimensional settings, we approximate $S_W$ as $S_W\approx I$, leaving us with
