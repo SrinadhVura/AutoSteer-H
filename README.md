@@ -4,7 +4,128 @@ This repository contains all the necessary contents to replicate *AutoSteer-H* f
 ---
 
 We have performed all the experiments on *llava-1.5-7B* model. Please go through the scripts directory for codebase and commands to reproduce our results.
+<img width="1723" height="913" alt="image" src="https://github.com/user-attachments/assets/9a679a3f-f4fe-448f-8b02-e52ec34e89cc" />
+#### Truth-Aware Layer Selection
 
+We construct a contrastive dataset of paired factual and hallucinated VLM responses for the same images. We extract the activation vectors $h_l(x_{\text{factual}})$ and $h_l(x_{\text{hallucinated}})$ at each intermediate layer $l$. We compute the contrastive vector $\delta_l$ and calculate the Truth Awareness Score (TAS) to find the layer with the highest score of factual distinctions capability:
+
+$$
+TAS(l)=\frac{1}{N}\sum_{i=1}^N\frac{h_{i,l}^{factual}.h_{i,l}^{hallucinated}}{||h_{i,l}^{factual}||_2.||h_{i,l}^{hallucinated}||_2}
+$$
+
+The layer $l^*$ with the highest TAS is selected for probing.
+
+---
+
+#### Dynamic Hallucination Prober
+
+Using layer $l^*$'s feature maps, we train a lightweight MLP prober $\mathcal{P}$ to output a hallucination probability score $s\in[0,1]$ \cite{paper1}. A single hidden layer MLP with ReLU non-linearity and sigmoid as the output activation to ouutput a score between 0 and 1.
+
+---
+
+#### Conditional Correction Steering
+
+When $s$ exceeds a preset threshold $\tau$, a global correction vector $\hat{W}$ is dynamically applied to the output embeddings $e_v$ using an adaptive steering signal $\alpha$:
+
+$$
+e_v^{\prime}=e_v+\alpha\cdot\hat{W}
+$$
+
+where $\hat{W}$ is the unit vector in the direction of:
+
+$$
+W=\mu_{factual}-\mu_{hallucinated}
+$$
+
+- $\mu_{factual}$ is the mean of all the feature maps of factual data observations at layer $l^*$.
+- $\mu_{hallucinated}$ is the mean of all the feature maps of hallucinated data observations at layer $l^*$.
+
+Unlike safety mechanisms that proceed to refusal, $\hat{W}$ steers away the model from hallucinations through LDA-inspired discriminative direction injection into hidden states.
+
+---
+
+#### Conditional Linear Steering via Fisher Discriminant Direction
+
+Let $h \in \mathbb{R}^d$ denote the hidden representation at a selected layer $l^*$.
+
+We consider two classes of representations obtained from paired prompts:
+
+$$
+\mathcal{H}_f = \{h_i^{(f)}\}_{i=1}^N \quad \text{(factual)},
+\qquad
+\mathcal{H}_h = \{h_i^{(h)}\}_{i=1}^N \quad \text{(hallucinated)}.
+$$
+
+Consider the hallucination probable feature maps as a class and the factual feature maps as another class.
+
+Let the class means be,
+
+$$
+\mu_f = \frac{1}{N} \sum_{i=1}^{N} h_i^{(f)},
+\qquad
+\mu_h = \frac{1}{N} \sum_{i=1}^{N} h_i^{(h)}.
+$$
+
+The classical Fisher Linear Discriminant direction is given by
+
+$$
+w^* = S_W^{-1} (\mu_f - \mu_h),
+$$
+
+where $S_W$ is the within-class scatter matrix:
+
+$$
+S_W = \sum_{i=1}^{N} (h_i^{(f)} - \mu_f)(h_i^{(f)} - \mu_f)^\top
++ \sum_{i=1}^{N} (h_i^{(h)} - \mu_h)(h_i^{(h)} - \mu_h)^\top.
+$$
+
+In high-dimensional settings, we approximate $S_W$ as $S_W\approx I$, leaving us with
+
+$$
+w \approx \mu_f - \mu_h.
+$$
+
+Thus, the steering vector used in our method is
+
+$$
+W = \mu_f - \mu_h,
+$$
+
+which serves as a discriminative direction separating factual and hallucinated representations.
+
+---
+
+#### Conditional activation steering
+
+Let $s \in [0,1]$ denote the hallucination probability score from a trained probe $\mathcal{P}$.
+
+We apply a threshold-based intervention:
+
+$$
+h' =
+\begin{cases}
+h + \alpha W, & \text{if } s > \tau, \\
+h, & \text{otherwise},
+\end{cases}
+$$
+
+where $\alpha$ is a fixed scaling hyperparameter and $\tau$ is a detection threshold.
+
+---
+
+#### Geometric interpretation
+
+The update $h' = h + \alpha W$ translates the representation along the Fisher discriminant direction, thereby increasing its alignment with the factual class. Specifically,
+
+$$
+W^\top h' = W^\top h + \alpha |W|^2,
+$$
+
+---
+
+#### Interpretation as linear decision boundary shift
+
+In Fisher Linear Discriminant method, classification is done through the sign of $w^\top h$. The proposed framework increases $w^\top h$, effectively pushing representations toward the factual side of the decision boundary.
 ### Results
 
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/87e3f530-fa16-4772-8009-8b46ded0b856" />
