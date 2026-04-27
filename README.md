@@ -1,6 +1,10 @@
 This repository contains all the necessary contents to replicate *AutoSteer-H* framework, our project for course DLCV 2026.
   **Vision-Language Models (VLMs)** experience significant hallucinations, often due to misalignments between visual inputs and textual outputs. Recent inference-time interventions aim to mitigate this by shifting latent representations globally, which also degrades performance on factual, benign queries. We propose **AutoSteer-H**, a framework that adaptively reduces hallucinations during inference without requiring tuning. By introducing a Truth Awareness Score (TAS) to pinpoint the intermediate layer most sensitive to factuality, we train a lightweight multi-layer perceptron (MLP) prober to predict the likelihood of hallucinations. A conditional steering head then activates dynamically to correct output only when a hallucination is likely. This method intends to cut down on hallucinations by ensuring visual grounding while maintaining the overall usefulness of the VLM.
   
+---
+
+We have performed all the experiments on *llava-1.5-7B* model. Please go through the scripts directory for codebase and commands to reproduce our results.
+
 ### Results
 
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/87e3f530-fa16-4772-8009-8b46ded0b856" />
