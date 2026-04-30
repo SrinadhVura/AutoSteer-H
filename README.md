@@ -126,6 +126,9 @@ $$
 
 In Fisher Linear Discriminant method, classification is done through the sign of $w^\top h$. The proposed framework increases $w^\top h$, effectively pushing representations toward the factual side of the decision boundary.
 ### Results
+<img width="640" height="427" alt="image" src="https://github.com/user-attachments/assets/44897642-dfbe-434f-b005-d374b8ed3d9c" />
+COCO_val2014_000000544456.jpg
+<img width="1258" height="531" alt="image" src="https://github.com/user-attachments/assets/bc94298c-0fa5-4ee8-a8e4-f0ceb1e62302" />
 
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/87e3f530-fa16-4772-8009-8b46ded0b856" />
 
