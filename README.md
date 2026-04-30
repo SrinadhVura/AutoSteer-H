@@ -126,9 +126,15 @@ $$
 
 In Fisher Linear Discriminant method, classification is done through the sign of $w^\top h$. The proposed framework increases $w^\top h$, effectively pushing representations toward the factual side of the decision boundary.
 ### Results
+In two examples below we can see that AutoSteer-H was successfully able to steer the model away from hallucination
 <img width="640" height="427" alt="image" src="https://github.com/user-attachments/assets/44897642-dfbe-434f-b005-d374b8ed3d9c" />
 COCO_val2014_000000544456.jpg
 <img width="1258" height="531" alt="image" src="https://github.com/user-attachments/assets/bc94298c-0fa5-4ee8-a8e4-f0ceb1e62302" />
+
+<img width="500" height="333" alt="image" src="https://github.com/user-attachments/assets/cb46aee1-3eaa-4a17-b2b0-ae587ff6c076" />
+COCO_val2014_000000458338.jpg
+<img width="1235" height="580" alt="image" src="https://github.com/user-attachments/assets/01d4fcb8-4ed2-4b8a-a4b2-7ca00c0bad7b" />
+
 
 <img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/87e3f530-fa16-4772-8009-8b46ded0b856" />
 
