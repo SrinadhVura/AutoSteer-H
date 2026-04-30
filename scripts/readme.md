@@ -10,6 +10,7 @@
 * **`run_chair_generation.py`**: Generates image descriptions for the CHAIR (Caption Hallucination Assessment with Image Relevance) evaluation using MS-COCO images. 
 * **`run_eval.py`**: Calculates classification metrics (TP, FP, TN, FN, Accuracy, Precision, Recall, F1) for the POPE benchmark results.
 * **`grid_search.py`**: Conducts a hyperparameter search to find the optimal steering intensity ($\alpha$) and prober threshold ($\tau$).
+* **`run_example.py`**: Runs the unsteered model and steered model on one of the example to show how AutoSteer-H steered the model away from hallucination
 
 ---
 
